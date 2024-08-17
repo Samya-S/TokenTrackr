@@ -2,6 +2,7 @@
 
 import CheckAllowanceComponent from "@/components/CheckAllowance";
 import TokenWatchList from "@/components/TokenWatchList";
+import TransferTokensComponent from "@/components/TransferTokens";
 import { useWallet } from "@/context/WalletContext";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
             <p>Your ETH Balance: {balance} ETH</p>
             <TokenWatchList />
             <CheckAllowanceComponent />
+            <TransferTokensComponent />
           </>
         ) : (
           <p>Wallet not connected</p>
