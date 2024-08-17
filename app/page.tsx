@@ -1,5 +1,6 @@
 "use client";
 
+import CheckAllowanceComponent from "@/components/CheckAllowance";
 import TokenWatchList from "@/components/TokenWatchList";
 import { useWallet } from "@/context/WalletContext";
 
@@ -15,6 +16,7 @@ export default function Home() {
             <p>Your connected chainId: {chainId}</p>
             <p>Your ETH Balance: {balance} ETH</p>
             <TokenWatchList />
+            <CheckAllowanceComponent />
           </>
         ) : (
           <p>Wallet not connected</p>
