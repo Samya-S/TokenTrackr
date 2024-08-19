@@ -16,7 +16,7 @@ import { Copy } from "lucide-react";
 export const ConnectWalletButton = () => {
   const { walletAddress, connected, chainId, connect, disconnect } = useWallet();
   const [walletButtonText, setWalletButtonText] = useState("Wallet Address");
-  const [chainidButtonText, setChainidButtonText] = useState("");
+  const [chainidButtonText, setChainidButtonText] = useState("Chain ID");
 
   return (
     <div className="relative">
