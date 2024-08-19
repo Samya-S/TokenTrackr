@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import { useWallet } from "@/context/WalletContext";
 import { Copy, Trash2 } from "lucide-react";
 
+// Interface for the token balance
 interface TokenBalance {
   tokenAddress: string;
   balance: string;
@@ -13,6 +14,7 @@ interface TokenBalance {
   symbol: string;
 }
 
+// ERC-20 ABI to get the name, symbol and balance of the token
 const ERC20_ABI = [
   // Some common ERC-20 methods
   "function name() view returns (string)",
@@ -27,8 +29,10 @@ const TokenWatchList: React.FC = () => {
   const [watchList, setWatchList] = useState<string[]>([]);
   const [eachTokenAddressInTable, setEachTokenAddressInTable] = useState<string>("");
 
+  // Create a new ethers provider using the injected ethereum provider
   const ethersProvider = new ethers.BrowserProvider(window.ethereum as any);
 
+  // function to get the name, symbol and balance of the token
   const getTokenDetails = async (tokenAddress: string) => {
     const tokenContract = new ethers.Contract(
       tokenAddress,
@@ -43,6 +47,7 @@ const TokenWatchList: React.FC = () => {
     return { name, symbol, balance };
   };
 
+  // function to add token to watch list
   const addTokenToWatchList = async () => {
     if (tokenAddress && !watchList.includes(tokenAddress)) {
       setWatchList((prevWatchList) => {
@@ -59,6 +64,7 @@ const TokenWatchList: React.FC = () => {
     }
   };
 
+  // function to fetch the balances of the tokens in the watch list
   const fetchTokenBalances = async (watchList: string[]) => {
     if (ethersProvider && walletAddress) {
       const tokens = await Promise.all(
@@ -112,6 +118,7 @@ const TokenWatchList: React.FC = () => {
     }
   };
 
+  // function to refetch the balances of the tokens in the watch list
   const refetchTokenBalances = async () => {
     try {
       await fetchTokenBalances(watchList);
@@ -122,16 +129,17 @@ const TokenWatchList: React.FC = () => {
     }
   };
 
+  // Listen for changes in the provider's accounts
   useEffect(() => {
     if (provider) {
       provider.on("accountsChanged", () => {
-        setWatchList([]);
-        setTokens([]);
+        setWatchList([]); // Clear the watch list
+        setTokens([]); // Clear the tokens
       });
     }
     return () => {
       if (provider) {
-        provider.removeAllListeners("accountsChanged");
+        provider.removeAllListeners("accountsChanged"); // Remove the listener when the component unmounts
       }
     };
   }, [provider]);

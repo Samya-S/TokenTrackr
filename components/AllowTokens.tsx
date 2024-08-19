@@ -10,8 +10,10 @@ const AllowTokensComponent = () => {
   const [recipient, setRecipient] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
 
+  // Create a new ethers provider using the injected ethereum
   const ethersProvider = new ethers.BrowserProvider(window.ethereum as any);
 
+  // function to transfer tokens
   const transferTokens = async (
     tokenAddress: string,
     to: string,
@@ -20,19 +22,23 @@ const AllowTokensComponent = () => {
     if (!ethersProvider || !connected) return;
 
     try {
+      // Create a new contract instance of the token
       const tokenContract = new ethers.Contract(
         tokenAddress,
-        ["function approve(address spender, uint256 amount) public returns (bool)"],
+        [
+          "function approve(address spender, uint256 amount) public returns (bool)",
+        ],
         await ethersProvider.getSigner()
       );
 
-      const tx = await tokenContract.approve(
-        to,
-        ethers.parseUnits(amount, 18)
-      );
+      // Approve the tokens
+      const tx = await tokenContract.approve(to, ethers.parseUnits(amount, 18));
+
+      // Wait for the transaction to be mined
       await tx.wait();
       alert("Approve successful");
     } catch (error) {
+      // Handle the error
       console.error("Failed to approve tokens", error);
       alert("Failed to approve tokens");
     }

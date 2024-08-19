@@ -10,8 +10,10 @@ const TransferTokensComponent = () => {
   const [recipient, setRecipient] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
 
+  // Create a new ethers provider using the injected ethereum provider
   const ethersProvider = new ethers.BrowserProvider(window.ethereum as any);
 
+  // function to transfer tokens
   const transferTokens = async (
     tokenAddress: string,
     to: string,
@@ -20,19 +22,24 @@ const TransferTokensComponent = () => {
     if (!ethersProvider || !connected) return;
 
     try {
+      // Create a new contract instance of the token
       const tokenContract = new ethers.Contract(
         tokenAddress,
         ["function transfer(address to, uint value) public returns (bool)"],
         await ethersProvider.getSigner()
       );
 
+      // Transfer the tokens
       const tx = await tokenContract.transfer(
         to,
         ethers.parseUnits(amount, 18)
       );
+
+      // Wait for the transaction to be mined
       await tx.wait();
       alert("Transfer successful");
     } catch (error) {
+      // Handle the error
       console.error("Failed to transfer tokens", error);
       alert("Failed to transfer tokens");
     }

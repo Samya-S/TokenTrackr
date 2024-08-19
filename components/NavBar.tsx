@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { Copy } from "lucide-react";
 
+// Connect Wallet Button to connect and disconnect the wallet
 export const ConnectWalletButton = () => {
   const { walletAddress, connected, chainId, connect, disconnect } = useWallet();
   const [walletButtonText, setWalletButtonText] = useState("Wallet Address");

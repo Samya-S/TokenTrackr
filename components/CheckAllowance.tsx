@@ -10,12 +10,15 @@ const CheckAllowanceComponent = () => {
   const [tokenAddress, setTokenAddress] = useState<string>("");
   const [spenderAddress, setSpenderAddress] = useState<string>("");
 
+  // Create a new ethers provider using the injected ethereum provider
   const ethersProvider = new ethers.BrowserProvider(window.ethereum as any);
 
+  // function to check allowance
   const checkAllowance = async () => {
     if (!ethersProvider || !walletAddress || !connected) return;
 
     try {
+      // Create a new contract instance of the token
       const tokenContract = new ethers.Contract(
         tokenAddress,
         [
@@ -24,12 +27,16 @@ const CheckAllowanceComponent = () => {
         await ethersProvider.getSigner()
       );
 
+      // Check the allowance
       const result = await tokenContract.allowance(
         walletAddress,
         spenderAddress
       );
+
+      // Set the allowance in state
       setAllowance(ethers.formatUnits(result, 18));
     } catch (error) {
+      // Handle the error
       console.error("Failed to fetch allowance", error);
       alert("Failed to fetch allowance");
     }
