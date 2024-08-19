@@ -14,8 +14,7 @@ import { useState } from "react";
 import { Copy } from "lucide-react";
 
 export const ConnectWalletButton = () => {
-  const { walletAddress, connected, chainId, connect, disconnect } =
-    useWallet();
+  const { walletAddress, connected, chainId, connect, disconnect } = useWallet();
   const [walletButtonText, setWalletButtonText] = useState("Wallet Address");
   const [chainidButtonText, setChainidButtonText] = useState("");
 
@@ -39,31 +38,37 @@ export const ConnectWalletButton = () => {
             <Button
               onMouseEnter={() => setWalletButtonText("Copy")}
               onMouseLeave={() => setWalletButtonText("Wallet Address")}
-              onClick={() => navigator.clipboard.writeText(walletAddress || "")}
+              onClick={() => {
+                navigator.clipboard.writeText(walletAddress || "");
+                setWalletButtonText("Copied");
+              }}
               className="block w-full pl-2 pr-4 py-2 mb-2 text-center text-black bg-transparent border border-black hover:bg-black hover:text-white"
             >
-              {walletButtonText === "Copy" ? (
+              {walletButtonText === "Wallet Address" ? (
+                walletButtonText
+              ) : (
                 <>
                   <Copy className="inline-block w-4 h-4 mr-2" />
-                  Copy
+                  {walletButtonText}
                 </>
-              ) : (
-                walletButtonText
               )}
             </Button>
             <Button
-              onMouseEnter={() => setChainidButtonText("hover")}
-              onMouseLeave={() => setChainidButtonText("")}
-              onClick={() => navigator.clipboard.writeText(chainId || "")}
+              onMouseEnter={() => setChainidButtonText(chainId as string)}
+              onMouseLeave={() => setChainidButtonText("Chain ID")}
+              onClick={() => {
+                navigator.clipboard.writeText(chainId || "");
+                setChainidButtonText("Copied");
+              }}
               className="block w-full pl-2 pr-4 py-2 my-2 text-center text-black bg-transparent border border-black hover:bg-black hover:text-white"
             >
-              {chainidButtonText === "hover" ? (
+              {chainidButtonText === "Chain ID" ? (
+                chainidButtonText
+              ) : (
                 <>
                   <Copy className="inline-block w-4 h-4 mr-2" />
-                  {chainId}
+                  {chainidButtonText}
                 </>
-              ) : (
-                "Chain ID"
               )}
             </Button>
             <Button

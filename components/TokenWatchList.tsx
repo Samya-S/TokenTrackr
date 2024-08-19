@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useWallet } from "@/context/WalletContext";
+import { Copy, Trash2 } from "lucide-react";
 
 interface TokenBalance {
   tokenAddress: string;
@@ -24,6 +25,7 @@ const TokenWatchList: React.FC = () => {
   const [tokenAddress, setTokenAddress] = useState<string>("");
   const [tokens, setTokens] = useState<TokenBalance[]>([]);
   const [watchList, setWatchList] = useState<string[]>([]);
+  const [eachTokenAddressInTable, setEachTokenAddressInTable] = useState<string>("");
 
   const ethersProvider = new ethers.BrowserProvider(window.ethereum as any);
 
@@ -163,32 +165,64 @@ const TokenWatchList: React.FC = () => {
 
           <div className="mt-4 flex justify-center">
             {tokens.length != 0 && (
-              <table className="mt-2 border-2">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 border">Name</th>
-                    <th className="px-4 py-2 border">Symbol</th>
-                    <th className="px-4 py-2 border">Token Address</th>
-                    <th className="px-4 py-2 border">Balance</th>
-                    <th className="px-4 py-2 border">Price (USD)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tokens.map(
-                    ({ tokenAddress, balance, price, name, symbol }) => (
-                      <tr key={tokenAddress}>
-                        <td className="px-4 py-2 border text-center">{name}</td>
-                        <td className="px-4 py-2 border text-center">{symbol}</td>
-                        <td className="px-4 py-2 border">{tokenAddress}</td>
-                        <td className="px-4 py-2 border text-right">{balance}</td>
-                        <td className="px-4 py-2 border text-right">{price}</td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="mt-2 border-2 text-nowrap">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border">Name</th>
+                      <th className="px-4 py-2 border">Symbol</th>
+                      <th className="px-4 py-2 border">Token Address</th>
+                      <th className="px-4 py-2 border">Balance</th>
+                      <th className="px-4 py-2 border">Price (USD)</th>
+                      <th className="px-4 py-2 border">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tokens.map(
+                      ({ tokenAddress, balance, price, name, symbol }) => {
+                        return (
+                          <tr key={tokenAddress}>
+                            <td className="px-4 py-2 border text-center">{name}</td>
+                            <td className="px-4 py-2 border text-center">{symbol}</td>
+                            <td
+                              className="px-4 py-2 border text-center hover:cursor-pointer min-w-[400px]"
+                              onMouseEnter={() => setEachTokenAddressInTable("Copy")}
+                              onMouseLeave={() => setEachTokenAddressInTable(tokenAddress)}
+                              onClick={() => {
+                                navigator.clipboard.writeText(tokenAddress);
+                                setEachTokenAddressInTable("Copied");
+                              }}
+                            >
+                              {(eachTokenAddressInTable !== tokenAddress && eachTokenAddressInTable !== "") && 
+                                <Copy className="inline-block w-4 h-4 mr-2" />
+                              }
+                              {eachTokenAddressInTable === "" ? tokenAddress : eachTokenAddressInTable}
+                            </td>
+                            <td className="px-4 py-2 border text-right">{balance}</td>
+                            <td className="px-4 py-2 border text-right">{price}</td>
+                            <td className="px-4 py-2 border text-center">
+                              <Trash2 
+                                className="inline-block w-5 h-5 -mt-1 hover:cursor-pointer"
+                                onClick={() => {
+                                  setWatchList((prevWatchList) =>
+                                    prevWatchList.filter(
+                                      (watchListTokenAddress) =>
+                                        watchListTokenAddress !== tokenAddress
+                                    )
+                                  );
+                                  fetchTokenBalances(watchList.filter((watchListTokenAddress) => watchListTokenAddress !== tokenAddress));
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      }
+                    )}
+                  </tbody>
+                </table>
+              </div>
             )}
-            {tokens.length == 0 && <p>No tokens in the watch list</p>}
+            {tokens.length === 0 && <p>No tokens in the watch list</p>}
           </div>
         </>
       ) : (

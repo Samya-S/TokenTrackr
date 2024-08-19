@@ -8,8 +8,8 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Crypto-Portfolio App",
-  description: "A simple crypto portfolio app",
+  title: "TokenTrackr",
+  description: "A simple crypto portfolio app that simplifies tracking your assets.",
 };
 
 export default function RootLayout({
