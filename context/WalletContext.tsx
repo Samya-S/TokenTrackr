@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useSDK } from "@metamask/sdk-react";
 import { SDKProvider, MetaMaskSDK } from "@metamask/sdk";
+import { ethers } from "ethers";
 
 interface WalletContextProps {
   walletAddress: string | null;
@@ -19,6 +20,7 @@ const WalletContext = createContext<WalletContextProps | undefined>(undefined);
 export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { sdk, connected, account, balance, chainId, provider } = useSDK();
   const [walletAddress, setWalletAddress] = useState<string | null>(account || null);
+  const formattedBalance = ethers.formatEther(balance || 0);
 
   useEffect(() => {
     if (account) {
@@ -44,7 +46,7 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   };
 
   return (
-    <WalletContext.Provider value={{ walletAddress, connected, balance, connect, disconnect, provider, chainId }}>
+    <WalletContext.Provider value={{ walletAddress, connected, balance: formattedBalance, connect, disconnect, provider, chainId }}>
       {children}
     </WalletContext.Provider>
   );

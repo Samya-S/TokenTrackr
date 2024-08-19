@@ -19,17 +19,20 @@ const TransferTokensComponent = () => {
   ) => {
     if (!ethersProvider || !connected) return;
 
-    try{
+    try {
       const tokenContract = new ethers.Contract(
         tokenAddress,
         ["function transfer(address to, uint value) public returns (bool)"],
         await ethersProvider.getSigner()
       );
-  
-      const tx = await tokenContract.transfer(to, ethers.parseUnits(amount, 18));
+
+      const tx = await tokenContract.transfer(
+        to,
+        ethers.parseUnits(amount, 18)
+      );
       await tx.wait();
       alert("Transfer successful");
-    } catch(error){
+    } catch (error) {
       console.error("Failed to transfer tokens", error);
       alert("Failed to transfer tokens");
     }
@@ -38,39 +41,41 @@ const TransferTokensComponent = () => {
     <div>
       {connected ? (
         <>
-          <p className="text-2xl font-medium text-center p-5">
+          {/* <p className="text-2xl font-medium text-center p-5">
             Transfer Tokens
-          </p>
+          </p> */}
           <input
             type="text"
             placeholder="Token Address"
             value={tokenAddress}
             onChange={(e) => setTokenAddress(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full mb-2"
+            className="border border-gray-300 rounded-md p-2 w-full max-w-xl ml-auto mr-auto block mb-2"
           />
           <input
             type="text"
             placeholder="Recipient Address"
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full mb-2"
+            className="border border-gray-300 rounded-md p-2 w-full max-w-xl ml-auto mr-auto block mb-2"
           />
           <input
             type="text"
             placeholder="Amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="border border-gray-300 rounded-md p-2 w-full max-w-xl ml-auto mr-auto block"
           />
-          <button
-            onClick={() => transferTokens(tokenAddress, recipient, amount)}
-            className="border-black border-2 hover:bg-black hover:text-white px-3 py-1 rounded-md mt-2 float-end"
-          >
-            Transfer
-          </button>
+          <div className="flex flex-row justify-end items-center w-full max-w-xl ml-auto mr-auto">
+            <button
+              onClick={() => transferTokens(tokenAddress, recipient, amount)}
+              className="border-black border-2 hover:bg-black hover:text-white px-3 py-1 rounded-md mt-2 transition-colors"
+            >
+              Transfer
+            </button>
+          </div>
         </>
       ) : (
-        <p>Please connect your wallet to see the watch list.</p>
+        <p>Please connect your wallet to transfer tokens.</p>
       )}
     </div>
   );

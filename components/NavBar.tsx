@@ -10,30 +10,72 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { useState } from "react";
+import { Copy } from "lucide-react";
 
 export const ConnectWalletButton = () => {
-  const { walletAddress, connected, connect, disconnect } = useWallet();
+  const { walletAddress, connected, chainId, connect, disconnect } =
+    useWallet();
+  const [walletButtonText, setWalletButtonText] = useState("Wallet Address");
+  const [chainidButtonText, setChainidButtonText] = useState("");
 
   return (
     <div className="relative">
       {connected ? (
         <Popover>
           <PopoverTrigger>
-            <Button>{walletAddress ? formatAddress(walletAddress) : "Wallet"}</Button>
+            <Button>
+              {walletAddress ? (
+                <>
+                  <WalletIcon className="mr-2 h-4 w-4" />
+                  {formatAddress(walletAddress)}
+                </>
+              ) : (
+                "Wallet"
+              )}
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="mt-2 w-44 bg-gray-100 border rounded-md shadow-lg right-0 z-10 top-10">
             <Button
+              onMouseEnter={() => setWalletButtonText("Copy")}
+              onMouseLeave={() => setWalletButtonText("Wallet Address")}
+              onClick={() => navigator.clipboard.writeText(walletAddress || "")}
+              className="block w-full pl-2 pr-4 py-2 mb-2 text-center text-black bg-transparent border border-black hover:bg-black hover:text-white"
+            >
+              {walletButtonText === "Copy" ? (
+                <>
+                  <Copy className="inline-block w-4 h-4 mr-2" />
+                  Copy
+                </>
+              ) : (
+                walletButtonText
+              )}
+            </Button>
+            <Button
+              onMouseEnter={() => setChainidButtonText("hover")}
+              onMouseLeave={() => setChainidButtonText("")}
+              onClick={() => navigator.clipboard.writeText(chainId || "")}
+              className="block w-full pl-2 pr-4 py-2 my-2 text-center text-black bg-transparent border border-black hover:bg-black hover:text-white"
+            >
+              {chainidButtonText === "hover" ? (
+                <>
+                  <Copy className="inline-block w-4 h-4 mr-2" />
+                  {chainId}
+                </>
+              ) : (
+                "Chain ID"
+              )}
+            </Button>
+            <Button
               onClick={disconnect}
-              className="block w-full pl-2 pr-4 py-2 text-left text-[#F05252] hover:bg-gray-200"
+              className="mt-2 block w-full pl-2 pr-4 py-2 text-center text-[#F05252] bg-transparent border border-[#F05252] hover:bg-[#F05252] hover:text-white"
             >
               Disconnect
             </Button>
           </PopoverContent>
         </Popover>
       ) : (
-        <Button onClick={connect}>
-          <WalletIcon className="mr-2 h-4 w-4" /> Connect Wallet
-        </Button>
+        <Button onClick={connect}>Connect Wallet</Button>
       )}
     </div>
   );
@@ -41,13 +83,13 @@ export const ConnectWalletButton = () => {
 
 export const NavBar = () => {
   return (
-    <nav className="flex items-center justify-between max-w-screen-xl px-6 mx-auto py-7 rounded-xl">
-      <Link href="/" className="flex gap-1 px-6">
-        <span className="hidden text-2xl font-bold sm:block">
-          <span className="text-gray-900">Crypto-Portfolio App</span>
+    <nav className="sm:flex items-center justify-between max-w-screen-xl px-6 mx-auto py-7 rounded-xl">
+      <Link href="/" className="flex gap-1 px-6 justify-center">
+        <span className="text-2xl font-bold mb-3 sm:mb-0">
+          <span className="text-gray-900">TokenTrackr</span>
         </span>
       </Link>
-      <div className="flex gap-4 px-6">
+      <div className="flex gap-4 px-6 justify-center">
         <ConnectWalletButton />
       </div>
     </nav>

@@ -15,21 +15,23 @@ const CheckAllowanceComponent = () => {
   const checkAllowance = async () => {
     if (!ethersProvider || !walletAddress || !connected) return;
 
-    try{
-        const tokenContract = new ethers.Contract(
-          tokenAddress,
-          [
-            "function allowance(address owner, address spender) view returns (uint)",
-          ],
-          await ethersProvider.getSigner()
-        );
-    
-        const result = await tokenContract.allowance(walletAddress, spenderAddress);
-        setAllowance(ethers.formatUnits(result, 18));
-    }
-    catch(error){
-        console.error("Failed to fetch allowance", error);
-        alert("Failed to fetch allowance");
+    try {
+      const tokenContract = new ethers.Contract(
+        tokenAddress,
+        [
+          "function allowance(address owner, address spender) view returns (uint)",
+        ],
+        await ethersProvider.getSigner()
+      );
+
+      const result = await tokenContract.allowance(
+        walletAddress,
+        spenderAddress
+      );
+      setAllowance(ethers.formatUnits(result, 18));
+    } catch (error) {
+      console.error("Failed to fetch allowance", error);
+      alert("Failed to fetch allowance");
     }
   };
 
@@ -45,27 +47,30 @@ const CheckAllowanceComponent = () => {
             placeholder="Token Address"
             value={tokenAddress}
             onChange={(e) => setTokenAddress(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full mb-2"
+            className="border border-gray-300 rounded-md p-2 w-full max-w-xl ml-auto mr-auto block mb-2"
           />
           <input
             type="text"
             placeholder="Spender Address"
             value={spenderAddress}
             onChange={(e) => setSpenderAddress(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
+            className="border border-gray-300 rounded-md p-2 w-full max-w-xl ml-auto mr-auto block"
           />
-          <div className="flex flex-row justify-between items-center">
-          <p className="px-1">Allowance: <span className="text-xl font-semibold">{allowance}</span></p>
-          <button
-            onClick={checkAllowance}
-            className="border-black border-2 hover:bg-black hover:text-white px-3 py-1 rounded-md mt-2"
-          >
-            Check Allowance
-          </button>
+          <div className="flex flex-row justify-between items-center w-full max-w-xl ml-auto mr-auto pb-5">
+            <p className="px-1">
+              Allowance:{" "}
+              <span className="text-xl font-semibold">{allowance}</span>
+            </p>
+            <button
+              onClick={checkAllowance}
+              className="border-black border-2 hover:bg-black hover:text-white px-3 py-1 rounded-md mt-2 transition-colors"
+            >
+              Check Allowance
+            </button>
           </div>
         </>
       ) : (
-        <p>Please connect your wallet to see the watch list.</p>
+        <p>Please connect your wallet to check allowance.</p>
       )}
     </div>
   );
