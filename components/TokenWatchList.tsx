@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import { useWallet } from "@/context/WalletContext";
 import { Trash2 } from "lucide-react";
 import { getCoinPrice } from "@/server/actions";
+import showToast from "./ui/Toast";
 
 // Interface for the token balance
 interface TokenBalance {
@@ -80,11 +81,11 @@ const TokenWatchList: React.FC = () => {
         return newWatchList;
       });
       setTokenAddress(""); // Clear the input after adding
-      alert("Token added to watch list");
+      showToast({ type: "success", message: "Token added to watch list" });
     } else if (watchList.includes(tokenAddress)) {
-      alert("Token already in watch list");
+      showToast({ type: "warning", message: "Token already in watch list" });
     } else {
-      alert("Please enter a valid token address");
+      showToast({ type: "error", message: "Please enter a valid token address" });
     }
   };
 
@@ -115,7 +116,7 @@ const TokenWatchList: React.FC = () => {
               `Failed to fetch balance for token: ${tokenAddress}`,
               error
             );
-            alert(`Failed to fetch balance for token: ${tokenAddress}`);
+            showToast({ type: "error", message: `Failed to fetch balance for token: ${tokenAddress}` });
             return {
               tokenAddress,
               balance: "Error",
@@ -149,10 +150,10 @@ const TokenWatchList: React.FC = () => {
   const refetchTokenBalances = async () => {
     try {
       await fetchTokenBalances(watchList);
-      alert("Balances refetched successfully");
+      showToast({ type: "success", message: "Balances refetched successfully" });
     } catch (error) {
       console.error("Failed to refetch balances", error);
-      alert("Failed to refetch balances");
+      showToast({ type: "error", message: "Failed to refetch balances" });
     }
   };
 

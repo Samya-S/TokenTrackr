@@ -3,6 +3,7 @@
 import { useWallet } from "@/context/WalletContext";
 import { ethers } from "ethers";
 import React, { useState } from "react";
+import showToast from "./ui/Toast";
 
 const TransferTokensComponent = () => {
   const { connected } = useWallet();
@@ -37,11 +38,11 @@ const TransferTokensComponent = () => {
 
       // Wait for the transaction to be mined
       await tx.wait();
-      alert("Transfer successful");
+      showToast({ message: "Transfer successful", type: "success" });
     } catch (error) {
       // Handle the error
       console.error("Failed to transfer tokens", error);
-      alert("Failed to transfer tokens");
+      showToast({ message: "Failed to transfer tokens", type: "error" });
     }
   };
   return (

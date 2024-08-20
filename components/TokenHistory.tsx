@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import  BitcoinPriceHistory  from "@/data/BitcoinPriceHistory";
+import showToast from "./ui/Toast";
 
 export interface PriceData {
   prices: [number, number][];
@@ -23,7 +24,7 @@ const TokenHistory: React.FC = () => {
         setTokens(response.coinIDs);
       } else {
         console.error("Failed to get coin IDs:", response.error);
-        alert("Failed to get coin IDs! Check your internet connection.");
+        showToast({ message: "Failed to get coin IDs! Check your internet connection.", type: "error" });
       }
     });
   }, []);
@@ -62,7 +63,7 @@ const TokenHistory: React.FC = () => {
       } else {
         setTokenID(finalTokenID);
         console.error("Failed to get token history:", response.error);
-        alert("Failed to get token history! Check your internet connection.");
+        showToast({ message: "Failed to get token history! Check your internet connection.", type: "error" });
       }
     });
   }, [fromDate, toDate, finalTokenID]);

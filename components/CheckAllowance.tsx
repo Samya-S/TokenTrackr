@@ -3,6 +3,7 @@
 import { useWallet } from "@/context/WalletContext";
 import { ethers } from "ethers";
 import React, { useState } from "react";
+import showToast from "./ui/Toast";
 
 const CheckAllowanceComponent = () => {
   const { walletAddress, connected } = useWallet();
@@ -38,7 +39,7 @@ const CheckAllowanceComponent = () => {
     } catch (error) {
       // Handle the error
       console.error("Failed to fetch allowance", error);
-      alert("Failed to fetch allowance");
+      showToast({ message: "Failed to fetch allowance", type: "error" });
     }
   };
 

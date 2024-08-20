@@ -4,6 +4,8 @@ import "./globals.css";
 import MetamaskWrapper from "./MetamaskWrapper";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +25,18 @@ export default function RootLayout({
         <MetamaskWrapper>
           <NavBar />
           {children}
+          <ToastContainer
+            position="bottom-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <Footer />
         </MetamaskWrapper>
       </body>

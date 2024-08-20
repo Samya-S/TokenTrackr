@@ -3,6 +3,7 @@
 import { useWallet } from "@/context/WalletContext";
 import { ethers } from "ethers";
 import React, { useState } from "react";
+import showToast from "./ui/Toast";
 
 const AllowTokensComponent = () => {
   const { connected } = useWallet();
@@ -36,11 +37,11 @@ const AllowTokensComponent = () => {
 
       // Wait for the transaction to be mined
       await tx.wait();
-      alert("Approve successful");
+      showToast({ message: "Approve successful", type: "success" });
     } catch (error) {
       // Handle the error
       console.error("Failed to approve tokens", error);
-      alert("Failed to approve tokens");
+      showToast({ message: "Failed to approve tokens", type: "error" });
     }
   };
   return (
