@@ -5,6 +5,21 @@ const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+// Get the price of a coin in USD
+export async function getCoinPrice(symbol: string) {
+  try {
+    const response = await fetch(
+      `https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD`
+    );
+    const data = await response.json();
+    const price = data.USD || 'N/A';
+    return { success: true, price };
+  } catch (error: any) {
+    console.error('Failed to get coin data:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Get the price history of a token
 export async function getTokenHistory(coinId: string, startDate: Date, endDate: Date) {
   // Convert the start and end dates to Unix timestamps
@@ -25,7 +40,7 @@ export async function getTokenHistory(coinId: string, startDate: Date, endDate: 
 }
 
 // Get the list of available coin IDs from the CoinGecko API
-export async function getCoinIDs(){
+export async function getCoinIDs() {
   try {
     const response = await fetch(
       `https://api.coingecko.com/api/v3/coins/list`

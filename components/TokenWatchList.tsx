@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useWallet } from "@/context/WalletContext";
-import { Copy, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { getCoinPrice } from "@/server/actions";
 
 // Interface for the token balance
 interface TokenBalance {
@@ -27,7 +28,6 @@ const TokenWatchList: React.FC = () => {
   const [tokenAddress, setTokenAddress] = useState<string>("");
   const [tokens, setTokens] = useState<TokenBalance[]>([]);
   const [watchList, setWatchList] = useState<string[]>([]);
-  const [eachTokenInTable, setEachTokenInTable] = useState<string>("");
   const [loaded, setLoaded] = useState<boolean>(false);
 
   // Load watchlist from local storage when component mounts
@@ -99,19 +99,14 @@ const TokenWatchList: React.FC = () => {
               tokenAddress
             );
 
-            // get the price of the token in USD      - not working, need to fix
-            // const response = await fetch(
-            //   `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd`
-            // );
-            // const data = await response.json();
-            // console.log(data);
-            // try to get the price of the token in USD else set it to N/A
-            // const price = data[tokenAddress.toLowerCase()].usd || "N/A";
+            // get the price of the token in USD
+            const res = await getCoinPrice(symbol);
+            const price = res.price || "N/A";
 
             return {
               tokenAddress,
               balance: ethers.formatUnits(balance, 6),
-              price: "N/A",
+              price,
               name,
               symbol,
             };
@@ -230,22 +225,18 @@ const TokenWatchList: React.FC = () => {
                             </td>
                             <td
                               className="px-4 py-2 border text-center hover:cursor-pointer min-w-[400px]"
-                              onMouseEnter={() => setEachTokenInTable("Copy")}
-                              onMouseLeave={() =>
-                                setEachTokenInTable(tokenAddress)
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.innerText = "Click to Copy")
                               }
-                              onClick={() => {
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.innerText = tokenAddress)
+                              }
+                              onClick={(e) => {
                                 navigator.clipboard.writeText(tokenAddress);
-                                setEachTokenInTable("Copied");
+                                e.currentTarget.innerText = "Copied!";
                               }}
                             >
-                              {eachTokenInTable !== tokenAddress &&
-                                eachTokenInTable !== "" && (
-                                  <Copy className="inline-block w-4 h-4 mr-2" />
-                                )}
-                              {eachTokenInTable === ""
-                                ? tokenAddress
-                                : eachTokenInTable}
+                              {tokenAddress}
                             </td>
                             <td className="px-4 py-2 border text-right">
                               {balance}

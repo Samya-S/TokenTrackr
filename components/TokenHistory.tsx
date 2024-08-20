@@ -83,7 +83,7 @@ const TokenHistory: React.FC = () => {
               placeholder="Search token"
             />
             {filteredTokens.length > 0 && (
-              <ul className="absolute z-10 ml-[3.65rem] border border-gray-300 bg-white rounded mt-1 w-36">
+              <ul className="absolute z-10 ml-[3.65rem] border border-gray-300 bg-white rounded mt-1 w-36 max-h-96 overflow-y-auto overflow-x-hidden">
                 {filteredTokens.map((token) => (
                   <li
                     key={token}
