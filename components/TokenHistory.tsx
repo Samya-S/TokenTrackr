@@ -3,7 +3,7 @@ import PriceChart from "../components/PriceChart";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import  bitcoinPriceHistory  from "@/data/bitcoinPriceHistory";
+import  bitcoinPriceHistory  from "../data/bitcoinPriceHistory";
 
 export interface PriceData {
   prices: [number, number][];
