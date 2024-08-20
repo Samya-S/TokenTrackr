@@ -12,6 +12,7 @@ export interface PriceData {
 const TokenHistory: React.FC = () => {
   // select the token state for fetching the token history
   const [tokenID, setTokenID] = useState<string>("Bitcoin");
+  const [finalTokenID, setFinalTokenID] = useState<string>("Bitcoin");
 
   const [tokens, setTokens] = useState<string[]>([]);
 
@@ -41,6 +42,7 @@ const TokenHistory: React.FC = () => {
 
   const handleTokenSelect = (token: string) => {
     setTokenID(token);
+    setFinalTokenID(token);
     setFilteredTokens([]);
   };
 
@@ -54,15 +56,16 @@ const TokenHistory: React.FC = () => {
   // Fetch the token history data using the tokenID, fromDate and toDate
   useEffect(() => {
     if (!fromDate || !toDate) return;
-    getTokenHistory(tokenID, fromDate, toDate).then((response) => {
+    getTokenHistory(finalTokenID, fromDate, toDate).then((response) => {
       if (response.success && Array.isArray(response.data.prices)) {
         setData(response.data);
       } else {
+        setTokenID(finalTokenID);
         console.error("Failed to get token history:", response.error);
         alert("Failed to get token history! Check your internet connection.");
       }
     });
-  }, [fromDate, toDate, tokenID]);
+  }, [fromDate, toDate, finalTokenID]);
 
   return (
     <div className="pb-5">
@@ -72,7 +75,7 @@ const TokenHistory: React.FC = () => {
 
       {/* Dropdown for selecting the token */}
       <div className="flex justify-center text-lg pb-5">
-        <p>
+        <div>
           Token:
           <span>
             <input
@@ -96,7 +99,7 @@ const TokenHistory: React.FC = () => {
               </ul>
             )}
           </span>
-        </p>
+        </div>
       </div>
 
       {/* Date picker for selecting the date range */}
