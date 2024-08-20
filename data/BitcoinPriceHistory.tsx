@@ -2,7 +2,7 @@ export interface PriceData {
     prices: [number, number][];
 }
 
-const bitcoinPriceHistory: PriceData = {
+const BitcoinPriceHistory: PriceData = {
     prices: [
         [
             1704067200000,
@@ -611,4 +611,4 @@ const bitcoinPriceHistory: PriceData = {
     ]
 }
 
-export default bitcoinPriceHistory;
+export default BitcoinPriceHistory;

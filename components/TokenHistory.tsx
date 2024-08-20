@@ -3,7 +3,7 @@ import PriceChart from "../components/PriceChart";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import  bitcoinPriceHistory  from "../data/bitcoinPriceHistory";
+import  BitcoinPriceHistory  from "@/data/BitcoinPriceHistory";
 
 export interface PriceData {
   prices: [number, number][];
@@ -49,7 +49,7 @@ const TokenHistory: React.FC = () => {
   const [toDate, setToDate] = useState<Date | null>(new Date("2024-08-01"));
 
   // state to store the token history data (initial data is set to a sample data)
-  const [data, setData] = useState<PriceData>(bitcoinPriceHistory);
+  const [data, setData] = useState<PriceData>(BitcoinPriceHistory);
 
   // Fetch the token history data using the tokenID, fromDate and toDate
   useEffect(() => {
