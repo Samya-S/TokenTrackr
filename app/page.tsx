@@ -3,6 +3,7 @@
 import AllowTokensComponent from "@/components/AllowTokens";
 import CheckAllowanceComponent from "@/components/CheckAllowance";
 import Introduction from "@/components/Introduction";
+import TokenHistory from "@/components/TokenHistory";
 import TokenWatchList from "@/components/TokenWatchList";
 import TransferTokensComponent from "@/components/TransferTokens";
 import { useWallet } from "@/context/WalletContext";
@@ -55,6 +56,7 @@ export default function Home() {
                 <AllowTokensComponent />
               )}
             </div>
+            <TokenHistory />
           </>
         ) : (
           // <p className="min-h-[50vh] flex justify-center items-center mb-20">Wallet not connected</p>
