@@ -27,7 +27,30 @@ const TokenWatchList: React.FC = () => {
   const [tokenAddress, setTokenAddress] = useState<string>("");
   const [tokens, setTokens] = useState<TokenBalance[]>([]);
   const [watchList, setWatchList] = useState<string[]>([]);
-  const [eachTokenAddressInTable, setEachTokenAddressInTable] = useState<string>("");
+  const [eachTokenInTable, setEachTokenInTable] = useState<string>("");
+  const [loaded, setLoaded] = useState<boolean>(false);
+
+  // Load watchlist from local storage when component mounts
+  useEffect(() => {
+    const getWatchList = async () => {
+      const storedWatchList = localStorage.getItem("watchList");
+      if (storedWatchList) {
+        const parsedWatchList = JSON.parse(storedWatchList);
+        setWatchList(parsedWatchList);
+      }
+    };
+    getWatchList();
+    setLoaded(true);
+    /* eslint-disable-next-line */
+  }, []);
+
+  // Fetch the balances of the tokens in the watch list when the component mounts
+  useEffect(() => {
+    if (loaded && connected) {
+      fetchTokenBalances(watchList);
+    }
+    /* eslint-disable-next-line */
+  }, [loaded]);
 
   // Create a new ethers provider using the injected ethereum provider
   const ethersProvider = new ethers.BrowserProvider(window.ethereum as any);
@@ -52,6 +75,7 @@ const TokenWatchList: React.FC = () => {
     if (tokenAddress && !watchList.includes(tokenAddress)) {
       setWatchList((prevWatchList) => {
         const newWatchList = [...prevWatchList, tokenAddress];
+        localStorage.setItem("watchList", JSON.stringify(newWatchList)); // Save to local storage
         fetchTokenBalances(newWatchList); // Call fetchTokenBalances with the updated watchList
         return newWatchList;
       });
@@ -114,6 +138,14 @@ const TokenWatchList: React.FC = () => {
         tokens
           .filter(({ balance }) => balance !== "Error")
           .map(({ tokenAddress }) => tokenAddress)
+      );
+      localStorage.setItem(
+        "watchList",
+        JSON.stringify(
+          tokens
+            .filter(({ balance }) => balance !== "Error")
+            .map(({ tokenAddress }) => tokenAddress)
+        )
       );
     }
   };
@@ -190,26 +222,39 @@ const TokenWatchList: React.FC = () => {
                       ({ tokenAddress, balance, price, name, symbol }) => {
                         return (
                           <tr key={tokenAddress}>
-                            <td className="px-4 py-2 border text-center">{name}</td>
-                            <td className="px-4 py-2 border text-center">{symbol}</td>
+                            <td className="px-4 py-2 border text-center">
+                              {name}
+                            </td>
+                            <td className="px-4 py-2 border text-center">
+                              {symbol}
+                            </td>
                             <td
                               className="px-4 py-2 border text-center hover:cursor-pointer min-w-[400px]"
-                              onMouseEnter={() => setEachTokenAddressInTable("Copy")}
-                              onMouseLeave={() => setEachTokenAddressInTable(tokenAddress)}
+                              onMouseEnter={() => setEachTokenInTable("Copy")}
+                              onMouseLeave={() =>
+                                setEachTokenInTable(tokenAddress)
+                              }
                               onClick={() => {
                                 navigator.clipboard.writeText(tokenAddress);
-                                setEachTokenAddressInTable("Copied");
+                                setEachTokenInTable("Copied");
                               }}
                             >
-                              {(eachTokenAddressInTable !== tokenAddress && eachTokenAddressInTable !== "") && 
-                                <Copy className="inline-block w-4 h-4 mr-2" />
-                              }
-                              {eachTokenAddressInTable === "" ? tokenAddress : eachTokenAddressInTable}
+                              {eachTokenInTable !== tokenAddress &&
+                                eachTokenInTable !== "" && (
+                                  <Copy className="inline-block w-4 h-4 mr-2" />
+                                )}
+                              {eachTokenInTable === ""
+                                ? tokenAddress
+                                : eachTokenInTable}
                             </td>
-                            <td className="px-4 py-2 border text-right">{balance}</td>
-                            <td className="px-4 py-2 border text-right">{price}</td>
+                            <td className="px-4 py-2 border text-right">
+                              {balance}
+                            </td>
+                            <td className="px-4 py-2 border text-right">
+                              {price}
+                            </td>
                             <td className="px-4 py-2 border text-center">
-                              <Trash2 
+                              <Trash2
                                 className="inline-block w-5 h-5 -mt-1 hover:cursor-pointer"
                                 onClick={() => {
                                   setWatchList((prevWatchList) =>
@@ -218,7 +263,21 @@ const TokenWatchList: React.FC = () => {
                                         watchListTokenAddress !== tokenAddress
                                     )
                                   );
-                                  fetchTokenBalances(watchList.filter((watchListTokenAddress) => watchListTokenAddress !== tokenAddress));
+                                  localStorage.setItem(
+                                    "watchList",
+                                    JSON.stringify(
+                                      watchList.filter(
+                                        (watchListTokenAddress) =>
+                                          watchListTokenAddress !== tokenAddress
+                                      )
+                                    )
+                                  );
+                                  fetchTokenBalances(
+                                    watchList.filter(
+                                      (watchListTokenAddress) =>
+                                        watchListTokenAddress !== tokenAddress
+                                    )
+                                  );
                                 }}
                               />
                             </td>
