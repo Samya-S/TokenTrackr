@@ -91,7 +91,7 @@ The app includes various visual elements:
 
 ## Deployment
 
-The application is deployed on Netlify (or another hosting service). You can access the live demo here: https://tokentrackr.vercel.app.
+The application is deployed on Netlify (or another hosting service). You can access the live demo here: https://tokentrackr-ss.vercel.app.
 
 ## Contributing
 
